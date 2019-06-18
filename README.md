@@ -115,8 +115,9 @@ function invertColors(data) {
 
 🌈 Huzzah! We're manipulating video data in a `canvas`, and now we can pull in elements from the other Noops (like [Hexbot](https://noopschallenge.com/challenges/hexbot)) to spice up our video.
 
+[See it in action](https://noops-challenge.github.io/cambot/starters/)
 
-**🔒 Note about security**: you can't access `getUserMedia` from a local file (meaning you can't just drag the HTML file into your browser). You need to serve the file with `https://`. But don't worry, that's easy! You can use [http-server](https://github.com/indexzero/http-server) to quickly serve a file.
+**🔒 Note about security**: you can't access `getUserMedia` from a local file (meaning you can't just drag the HTML file into your browser). You need to serve the file with `https://`. But don't worry, that's easy! You can use [http-server](https://github.com/indexzero/http-server) to quickly serve a file on your local computer, and you can use [GitHub Pages](https://pages.github.com/) to easily share your creation with the world.
 
 ## 🎥 Camera
 
