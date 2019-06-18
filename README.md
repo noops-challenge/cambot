@@ -100,7 +100,7 @@ function drawVideo() {
 }
 ```
 
-🌈 Now that you have a way of manipulating the data in a `canvas`, pull in elements from the other Noops (like [Hexbot](https://noopschallenge.com/challenges/hexbot)) and spice up your video.
+🌈 Huzzah! We're manipulating video data in a `canvas`, and now we can pull in elements from the other Noops (like [Hexbot](https://noopschallenge.com/challenges/hexbot)) to spice up our video.
 
 
 **🔒 Note about security**: you can't access `getUserMedia` from a local file (meaning you can't just drag the HTML file into your browser). You need to serve the file with `https://`. But don't worry, that's easy! You can use [http-server](https://github.com/indexzero/http-server) to quickly serve a file.
@@ -113,9 +113,9 @@ Libraries to help you get started:
 
 - [p5js](https://github.com/processing/p5.js): is an expressive framework for working with media and JavaScript, and has a library dedicated to working with browser media: [p5.dom](https://p5js.org/reference/#/libraries/p5.dom)
 
-- [react-webcam](https://github.com/mozmorris/react-webcam): A popular and well-supported library for accessing the webcam in React. Accessing the webcam is as simple as adding a tag to your React app, and comes with a built-in method to make a screenshot. Grab the screenshot
+- [react-webcam](https://github.com/mozmorris/react-webcam): A popular and well-supported library for accessing the webcam in React. Accessing the webcam is as simple as adding a tag to your React app, and comes with a built-in method to make a screenshot.
 
-- [three.js](https://github.com/mrdoob/three.js): Three.js is a popular 3D software that has build in webcam support ([example here](https://threejs.org/examples/webgl_materials_video_webcam.html) and code [here](https://github.com/mrdoob/three.js/blob/dev/examples/webgl_materials_video_webcam.html)).
+- [three.js](https://github.com/mrdoob/three.js): Three.js is a popular 3D software that has ready made webcam code ([example ](https://threejs.org/examples/webgl_materials_video_webcam.html) and [code](https://github.com/mrdoob/three.js/blob/dev/examples/webgl_materials_video_webcam.html)).
 
 
 ## 🎤 Microphone
@@ -130,12 +130,12 @@ Libraries to help you get started:
 
 - [waveform-data.js](https://github.com/bbc/waveform-data.js): from the BBC, a library to give you representations of audio waveforms that you can zoom, browse, and manipulate.
 
-Need some inspiration? Check out this great [list fo Audio Visualization examples and tools](https://github.com/willianjusten/awesome-audio-visualization) from [@williamjusten](https://github.com/willianjusten)
+Need some inspiration? Check out this great [list of Audio Visualization examples and tools](https://github.com/willianjusten/awesome-audio-visualization) from [@williamjusten](https://github.com/willianjusten).
 
 
 ## ❓ Other sensors
 
-While most laptops only have microphones and cameras, phones and tablets have a wealth of sensors you can access, like the accelerometer, gyroscope, GPS, and even light sensor. Support is spotty across devices—but we'd love to see what you come up with!
+While most laptops only have microphones and cameras, phones and tablets have a wealth of sensors you can access—like the accelerometer, gyroscope, GPS, and even light sensor. Support is spotty across devices—but we'd love to see what you come up with!
 
 ## ✨ A few ideas
 
