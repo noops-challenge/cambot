@@ -10,18 +10,15 @@
   </head>
   <body>
     <h4>Video:</h4>
-    <video style="width:800;height:450;"></video>
+    <video style="max-height:40vh;"></video>
 
     <h4>Canvas:</h4>
-    <canvas style="width:800;height:450;"></canvas>
+    <canvas></canvas>
 
     <script type='text/javascript'>
       const video = document.querySelector('video');
       const constraints = {
-        video: {
-          width: 800,
-          height: 450
-        }
+        video: true
       };
 
       navigator.mediaDevices.getUserMedia(constraints)
@@ -47,10 +44,20 @@
         let video  = document.querySelector('video');
         let canvas = document.querySelector('canvas');
         let ctx    = canvas.getContext('2d');
+        let sizedCanvas = false;
 
         function drawVideo() {
-          ctx.drawImage(video, 0, 0, 800, 450);
-          var frameData = ctx.getImageData(0, 0, 800, 450);
+
+          if (video.videoHeight && !sizedCanvas) {
+            var height = window.innerHeight * 0.4;
+            var width = height * video.videoWidth / video.videoHeight;
+            canvas.width= width;
+            canvas.height = height;
+            ctx = canvas.getContext('2d');
+            sizedCanvas = true;
+          }
+          ctx.drawImage(video, 0,0,video.videoWidth, video.videoHeight, 0, 0, canvas.width, canvas.height);
+          var frameData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           invertColors(frameData.data);
           ctx.putImageData(frameData, 0, 0);
           requestAnimationFrame(drawVideo);
