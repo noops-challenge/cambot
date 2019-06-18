@@ -47,10 +47,12 @@ When your promise resolves, you can access your video `stream`. The first thing 
 
 ```javascript
 const video = document.querySelector('video');
+const constraints = { audio: true, video: true };
 
-navigator.mediaDevices.getUserMedia(constraints).
+navigator.mediaDevices.getUserMedia(constraints)
   .then(function(stream) {
     video.srcObject = stream;
+    video.play();
   }).catch(function(err) {
     //handle error
   });
@@ -65,39 +67,50 @@ But we're just getting started, because your `video` tag is also accessible to J
 Using the `video` as a source, you can use the `canvas` API's `drawImage()` to render the pixels.
 
 ```javascript
-let canvas = document.getElementById('canvas');
+let canvas = document.querySelector('canvas');
 let ctx    = canvas.getContext('2d');
-let video  = document.getElementById('video');
+let video  = document.querySelector('video');
 
-canvas.width = video.width;
-canvas.height = video.height;
+navigator.mediaDevices.getUserMedia(constraints)
+  .then(function(stream) {
+    video.srcObject = stream;
+    video.play();
+    kickoff()
+  }).catch(function(err) {
+    console.error("Shoot, we need to access your camera to make this demo work.")
+});
 
-function drawVideo() {
-  ctx.drawImage(this, 0, 0);
+function kickoff() {
+  let video  = document.querySelector('video');
+  let canvas = document.querySelector('canvas');
+  let ctx    = canvas.getContext('2d');
+
+  function drawVideo() {
+    ctx.drawImage(video, 0, 0, 800, 450);
+    var frameData = ctx.getImageData(0, 0, 800, 450);
+    ctx.putImageData(frameData, 0, 0);
+    requestAnimationFrame(drawVideo);
+  }
+
+  //kickoff
+  requestAnimationFrame(drawVideo);
 }
-
-requestAnimationFrame(drawVideo);
 ```
+Now that we're drawing the pixels to canvas as data, we can manipulate them. Let's invert the colors.
 
-Now that we're drawing the pixels to a canvas as data, we can manipulate them. Let's invert the colors.
+Add a call to `invertColors(frameData)` to the above, before `putImageData`:
 
-Replace `drawVideo` from the above code with:
 
 ```javascript
 function invertColors(data) {
   let dataLength = data.length;
   for (var i = 0; i < dataLength; i+= 4) {
-    data[i] = data[i] ^ 255; // Invert Red
-    data[i+1] = data[i+1] ^ 255; // Invert Green
-    data[i+2] = data[i+2] ^ 255; // Invert Blue
+    //invert RGB
+    data[i] = data[i] ^ 255;
+    data[i+1] = data[i+1] ^ 255;
+    data[i+2] = data[i+2] ^ 255;
   }
-}
-
-function drawVideo() {
-  var frameData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  invertColors(frameData.data);
-  ctx.putImageData(frameData, 0, 0);
-}
+}}
 ```
 
 🌈 Huzzah! We're manipulating video data in a `canvas`, and now we can pull in elements from the other Noops (like [Hexbot](https://noopschallenge.com/challenges/hexbot)) to spice up our video.

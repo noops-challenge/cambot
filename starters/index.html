@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>Meet the Noops: Cambot Demo</title>
+    <style>
+      body {
+        font-family: 'Verdana';
+        margin: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h4>Video:</h4>
+    <video style="width:800;height:450;"></video>
+
+    <h4>Canvas:</h4>
+    <canvas style="width:800;height:450;"></canvas>
+
+    <script type='text/javascript'>
+      const video = document.querySelector('video');
+      const constraints = {
+        video: {
+          width: 800,
+          height: 450
+        }
+      };
+
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then(function(stream) {
+          video.srcObject = stream;
+          video.play();
+          kickoff()
+        }).catch(function(err) {
+          console.error("Shoot, we need to access your camera to make this demo work.")
+      });
+
+      function invertColors(data) {
+        let dataLength = data.length;
+        for (var i = 0; i < dataLength; i+=4) {
+          //invert RGB
+          data[i] = data[i] ^ 255;
+          data[i+1] = data[i+1] ^ 255;
+          data[i+2] = data[i+2] ^ 255;
+        }
+      }
+
+      function kickoff() {
+        let video  = document.querySelector('video');
+        let canvas = document.querySelector('canvas');
+        let ctx    = canvas.getContext('2d');
+
+        function drawVideo() {
+          ctx.drawImage(video, 0, 0, 800, 450);
+          var frameData = ctx.getImageData(0, 0, 800, 450);
+          invertColors(frameData.data);
+          ctx.putImageData(frameData, 0, 0);
+          requestAnimationFrame(drawVideo);
+        }
+
+        //kickoff
+        requestAnimationFrame(drawVideo);
+      }
+
+      </script>
+  </body>
+</html>
