@@ -6,13 +6,13 @@ Cameras, microphones, and more—your device is alive with sensors. Let's see wh
 
 This Noop is a little different from the others: there's no API!
 
-Accessing devices can be a little intimidating for new developers, but modern browsers have made it easy. Read the documentation below for tips on how to get started, and then use the other Noop APIs to enliven the data with random colors, polygons, or sounds to create something awesome.
+Accessing devices can be a little intimidating, but modern browsers have made it easy. Read the documentation below for tips on how to get started, and then use the other Noop APIs to enliven the data with random colors, polygons, or sounds to create something awesome.
 
 Share what you make with us on Twitter (#noopschallenge) or on the GitHub Community page for this challenge [here](https://github.community/t5/Events/Noops-Week-Two-Cambot-discussion/td-p/25745).
 
 ## 📹 What can you do?
 
-On modern browsers, it is (relatively) simple to access the user's sensors. [getUserMedia()](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) is the workhorse you'll need to learn how to use.
+On modern browsers, it is (relatively) simple to access the user's sensors. [getUserMedia()](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) is the workhorse you'll need to learn how to work with.
 
 `getUserMedia` takes a `constraints` object where you ask for what you need. If you want access to both audio and video, pass this object:
 
