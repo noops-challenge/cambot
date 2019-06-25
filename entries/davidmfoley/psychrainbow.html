@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <title>Meet the Noops: Cambot Demo</title>
+    <style>
+      body {
+        font-family: 'Verdana';
+        margin: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h4>Video:</h4>
+    <video style="max-height:40vh;"></video>
+
+    <h4>Canvas:</h4>
+    <canvas></canvas>
+
+    <script type='text/javascript'>
+      const video = document.querySelector('video');
+      const constraints = {
+        video: true
+      };
+
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then(function(stream) {
+          video.srcObject = stream;
+          video.play();
+          kickoff()
+        }).catch(function(err) {
+          console.error("Shoot, we need to access your camera to make this demo work.")
+      });
+
+      let runningAverage = [];
+      let nextSampleTime = 0;
+      let sampleInterval = 100;
+
+      function applyAwesomeoness(data, width, time) {
+
+        let dataLength = data.length;
+        for (var i = 0; i < dataLength; i+=4) {
+          let colorSum = data[i] + data[i+1] + data[i+2];
+
+          const diff = Math.abs(colorSum - runningAverage[i]);
+
+          const x = i % width;
+          const y = Math.floor(i / width);
+          const redShift = Math.abs(((time + x) % 512) - 256);
+          const greenShift = Math.abs((y - time) % 512 - 256);
+
+
+          data[i] = (data[i] + redShift) & 255
+          data[i+1] = (data[i+1] + greenShift + diff) & 255;
+          data[i+2] = diff //(data[i+2] + diff) & 255;
+
+          if (nextSampleTime < time) {
+            runningAverage[i] = (runningAverage[1] + colorSum) >> 1;
+          }
+        }
+        if (nextSampleTime < time) {
+          nextSampleTime = time + sampleInterval;
+        }
+      }
+
+      function kickoff() {
+        let video  = document.querySelector('video');
+        let canvas = document.querySelector('canvas');
+        let ctx    = canvas.getContext('2d');
+        let sizedCanvas = false;
+
+        function drawVideo() {
+
+          if (video.videoHeight && !sizedCanvas) {
+            var height = Math.floor(window.innerHeight * 0.4);
+            var width = Math.floor(height * video.videoWidth / video.videoHeight);
+            canvas.width= width;
+            canvas.height = height;
+            runningAverage = Array(width * height).fill(0);
+            ctx = canvas.getContext('2d');
+            sizedCanvas = true;
+          }
+          ctx.drawImage(video, 0,0,video.videoWidth, video.videoHeight, 0, 0, canvas.width, canvas.height);
+          var frameData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          applyAwesomeoness(frameData.data, canvas.width, Date.now());
+          ctx.putImageData(frameData, 0, 0);
+          requestAnimationFrame(drawVideo);
+        }
+
+        //kickoff
+        requestAnimationFrame(drawVideo);
+      }
+
+      </script>
+  </body>
+</html>
