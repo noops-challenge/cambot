@@ -1,5 +1,6 @@
 <html>
   <head>
+    <script type="text/javascript" src="./video-transformers.js"></script>
     <title>Meet the Noops: Cambot Demo</title>
     <style>
       body {
@@ -30,42 +31,14 @@
           console.error("Shoot, we need to access your camera to make this demo work.")
       });
 
-      let runningAverage = [];
-      let nextSampleTime = 0;
-      let sampleInterval = 100;
 
-      function applyAwesomeoness(data, width, time) {
-
-        let dataLength = data.length;
-        for (var i = 0; i < dataLength; i+=4) {
-          let colorSum = data[i] + data[i+1] + data[i+2];
-
-          const diff = Math.abs(colorSum - runningAverage[i]);
-
-          const x = i % width;
-          const y = Math.floor(i / width);
-          const redShift = Math.abs(((time + x) % 512) - 256);
-          const greenShift = Math.abs((y - time) % 512 - 256);
-
-
-          data[i] = (data[i] + redShift) & 255
-          data[i+1] = (data[i+1] + greenShift + diff) & 255;
-          data[i+2] = diff //(data[i+2] + diff) & 255;
-
-          if (nextSampleTime < time) {
-            runningAverage[i] = (runningAverage[1] + colorSum) >> 1;
-          }
-        }
-        if (nextSampleTime < time) {
-          nextSampleTime = time + sampleInterval;
-        }
-      }
-
+          console.log('yo')
       function kickoff() {
         let video  = document.querySelector('video');
         let canvas = document.querySelector('canvas');
         let ctx    = canvas.getContext('2d');
         let sizedCanvas = false;
+        let transformer = function() {};
 
         function drawVideo() {
 
@@ -77,10 +50,12 @@
             runningAverage = Array(width * height).fill(0);
             ctx = canvas.getContext('2d');
             sizedCanvas = true;
+
+            transformer = psychrainbow(width, height);
           }
           ctx.drawImage(video, 0,0,video.videoWidth, video.videoHeight, 0, 0, canvas.width, canvas.height);
           var frameData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          applyAwesomeoness(frameData.data, canvas.width, Date.now());
+          transformer(frameData.data, Date.now());
           ctx.putImageData(frameData, 0, 0);
           requestAnimationFrame(drawVideo);
         }
