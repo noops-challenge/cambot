@@ -54,9 +54,33 @@ function changes(width, height) {
   };
 }
 
-function nooptendo(width, height) {
+function changebow(width, height) {
   let runningAverage = Array(width * height).fill(384);
 
+  return function(data, time) {
+    let dataLength = data.length;
+    for (var i = 0; i < dataLength; i+=4) {
+
+      let colorSum = data[i] + data[i+1] + data[i+2];
+      const x = i % width;
+      const y = Math.floor(i / width);
+
+      //const diff = Math.floor(Math.abs(colorSum - runningAverage[i>>2]) / 3);
+      const diff = Math.min(colorSum - runningAverage[i>>2], 256);
+      const redShift = Math.abs(((time + x) % 512) - 256);
+      const greenShift = Math.abs((time+ y) % 512 - 256);
+      const blueShift = Math.abs((time+ y + x) % 512 - 256);
+
+      data[i] = (diff * redShift) >> 8;
+      data[i+1] = (diff * greenShift) >> 8;
+      data[i+2] = (diff * blueShift) >> 8;
+
+      runningAverage[i>>2] = (colorSum * 63 + runningAverage[i>>2]) >> 6;
+    }
+  };
+}
+
+function nooptendo(width, height) {
   // blow out the colors here
   const levels = [0, 50, 160, 255];
 
@@ -83,6 +107,7 @@ function nooptendo(width, height) {
 
 var transformers = {
   changes,
+  changebow,
   psychrainbow,
   psychrainbow,
   nooptendo,
