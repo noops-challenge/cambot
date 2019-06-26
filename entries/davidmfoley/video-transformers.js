@@ -121,6 +121,38 @@ function nooptendo(width, height) {
   }
 }
 
+function triangle(period, amplitude) {
+  return value => Math.floor(Math.abs(value % period<<1) - period) * (amplitude / period);
+}
+
+function target(width, height) {
+  let distance = Array(width*height).fill(0);
+
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+      distance[y*width +x ] = Math.floor(Math.sqrt(
+        Math.pow(x-(width>>1),2)  + Math.pow(y-(height>>1), 2)
+      ));
+    }
+  }
+
+  return function(data, time) {
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const offset = (y*width + x) << 2;
+        const d = Math.abs((-(time>>2) + distance[y*width + x]) % 256 - 256);
+
+        data[offset] =  (data[offset] + d) & 255;
+        data[offset+1] = (data[offset+1] ^ d) & 255;
+        data[offset+2] = (data[offset+2] - d) & 255;
+        //data[offset+1] = (data[offset+1] + d) & 255;
+        //data[offset] = data[offset] + d;
+      }
+    }
+  }
+}
+
+
 var transformers = {
   changes,
   changebow,
@@ -128,5 +160,6 @@ var transformers = {
   psychrainbow,
   nooptendo,
   toomuch,
+  target,
   none: () => () => {}
 };
