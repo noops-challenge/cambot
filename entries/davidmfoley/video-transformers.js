@@ -54,9 +54,38 @@ function changes(width, height) {
   };
 }
 
+function nooptendo(width, height) {
+  let runningAverage = Array(width * height).fill(384);
+
+  // blow out the colors here
+  const levels = [0, 50, 160, 255];
+
+  return function(data, time) {
+    let dataLength = data.length >> 2;
+    for (var i = 0; i < dataLength; i++) {
+
+      const offset = i << 2;
+
+      let x = i % width;
+      let y = Math.floor(i / width);
+
+      let centerY = y | 3;
+      let centerX = x | 3;
+      let center = (centerY * width + centerX) << 2;
+
+
+      data[offset] = levels[data[center] >> 6]
+      data[offset+1] = levels[data[center+1] >>6]
+      data[offset+2] = levels[data[center+2] >>6]
+    }
+  }
+}
+
 var transformers = {
   changes,
   psychrainbow,
+  psychrainbow,
+  nooptendo,
   toomuch,
   none: () => () => {}
 };
