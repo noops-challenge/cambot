@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <script type="text/javascript" src="./video-transformers.js"></script>
+    <title>Meet the Noops: Cambot Demo</title>
+    <style>
+      body {
+        font-family: 'Verdana';
+        margin: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h4>Video:</h4>
+    <video style="max-height:40vh;"></video>
+
+
+    <div>
+      <label>
+        Effect
+        <select id='effect'>
+          <option value="none">none</option>
+          <option value="psychrainbow">psychrainbow</option>
+          <option value="changes">changes</option>
+          <option value="changebow">changebow</option>
+          <option value="toomuch">toomuch</option>
+          <option value="nooptendo">nooptendo</option>
+          <option value="target">target</option>
+        </select>
+      </label>
+    </div>
+
+    <canvas></canvas>
+
+    <script type='text/javascript'>
+      const video = document.querySelector('video');
+      const constraints = {
+        video: true
+      };
+
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then(function(stream) {
+          video.srcObject = stream;
+          video.play();
+          kickoff()
+        }).catch(function(err) {
+          console.error("Shoot, we need to access your camera to make this demo work.")
+      });
+
+
+      function kickoff() {
+        let video  = document.querySelector('video');
+        let canvas = document.querySelector('canvas');
+        let ctx    = canvas.getContext('2d');
+        let sizedCanvas = false;
+        let transformer = function() {};
+
+        function drawVideo() {
+
+          if (video.videoHeight && !sizedCanvas) {
+            var height = Math.floor(window.innerHeight * 0.4);
+            var width = Math.floor(height * video.videoWidth / video.videoHeight);
+            canvas.width= width;
+            canvas.height = height;
+            runningAverage = Array(width * height).fill(0);
+            ctx = canvas.getContext('2d');
+            sizedCanvas = true;
+
+            document.getElementById('effect').addEventListener('change', function(e) {
+              transformer = transformers[e.target.value](width, height);
+            });
+            transformer = transformers.none(width, height);
+          }
+          ctx.drawImage(video, 0,0,video.videoWidth, video.videoHeight, 0, 0, canvas.width, canvas.height);
+          var frameData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          transformer(frameData.data, Date.now());
+          ctx.putImageData(frameData, 0, 0);
+          requestAnimationFrame(drawVideo);
+        }
+
+        //kickoff
+        requestAnimationFrame(drawVideo);
+      }
+
+      </script>
+  </body>
+</html>
