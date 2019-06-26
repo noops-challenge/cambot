@@ -13,7 +13,18 @@
     <h4>Video:</h4>
     <video style="max-height:40vh;"></video>
 
-    <h4>Canvas:</h4>
+
+    <div>
+      <label>
+        Effect
+        <select id='effect'>
+          <option value="none">none</option>
+          <option value="psychrainbow">psychrainbow</option>
+          <option value="changes">changes</option>
+        </select>
+      </label>
+    </div>
+
     <canvas></canvas>
 
     <script type='text/javascript'>
@@ -32,7 +43,6 @@
       });
 
 
-          console.log('yo')
       function kickoff() {
         let video  = document.querySelector('video');
         let canvas = document.querySelector('canvas');
@@ -51,7 +61,10 @@
             ctx = canvas.getContext('2d');
             sizedCanvas = true;
 
-            transformer = psychrainbow(width, height);
+            document.getElementById('effect').addEventListener('change', function(e) {
+              transformer = transformers[e.target.value](width, height);
+            });
+            transformer = transformers.none(width, height);
           }
           ctx.drawImage(video, 0,0,video.videoWidth, video.videoHeight, 0, 0, canvas.width, canvas.height);
           var frameData = ctx.getImageData(0, 0, canvas.width, canvas.height);
