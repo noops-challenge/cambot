@@ -16,6 +16,23 @@ function psychrainbow(width, height) {
   };
 }
 
+function toomuch(width, height) {
+  return function(data, time) {
+    let dataLength = data.length;
+    for (var i = 0; i < dataLength; i+=4) {
+      const x = i % width;
+      const y = Math.floor(i / width);
+      const redShift = Math.abs(((time + x) % 512) - 256);
+      const greenShift = Math.abs((time+ y) % 512 - 256);
+
+      //invert RGB
+      data[i] = (data[i] + redShift) & 255
+      data[i+1] = (data[i+1] + greenShift) & 255;
+      data[i+2] = (data[i+2] + (redShift + greenShift ^ 183)) & 255;
+    }
+  }
+}
+
 function changes(width, height) {
   let runningAverage = Array(width * height).fill(384);
 
@@ -40,5 +57,6 @@ function changes(width, height) {
 var transformers = {
   changes,
   psychrainbow,
+  toomuch,
   none: () => () => {}
 };
