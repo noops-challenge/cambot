@@ -27,7 +27,7 @@ You can specify a [lot more details](https://developer.mozilla.org/en-US/docs/We
 This means your code will need to request access and then asynchronously gain access to the media stream. Here's a standard implementation:
 
 ```javascript
-let constraints = { audio: true, video: true };
+const constraints = { audio: true, video: true };
 
 navigator.mediaDevices.getUserMedia(constraints)
   .then(function(stream) {
@@ -67,9 +67,9 @@ But we're just getting started, because your `video` tag is also accessible to J
 Using the `video` as a source, you can use the `canvas` API's `drawImage()` to render the pixels.
 
 ```javascript
-let canvas = document.querySelector('canvas');
-let ctx    = canvas.getContext('2d');
-let video  = document.querySelector('video');
+const canvas = document.querySelector('canvas');
+const ctx = canvas.getContext('2d');
+const video = document.querySelector('video');
 
 navigator.mediaDevices.getUserMedia(constraints)
   .then(function(stream) {
@@ -81,18 +81,18 @@ navigator.mediaDevices.getUserMedia(constraints)
 });
 
 function kickoff() {
-  let video  = document.querySelector('video');
-  let canvas = document.querySelector('canvas');
-  let ctx    = canvas.getContext('2d');
+  const video = document.querySelector('video');
+  const canvas = document.querySelector('canvas');
+  const ctx = canvas.getContext('2d');
 
   function drawVideo() {
     ctx.drawImage(video, 0, 0, 800, 450);
-    var frameData = ctx.getImageData(0, 0, 800, 450);
+    const frameData = ctx.getImageData(0, 0, 800, 450);
     ctx.putImageData(frameData, 0, 0);
     requestAnimationFrame(drawVideo);
   }
 
-  //kickoff
+  // kickoff
   requestAnimationFrame(drawVideo);
 }
 ```
@@ -103,8 +103,8 @@ Add a call to `invertColors(frameData)` to the above, before `putImageData`:
 
 ```javascript
 function invertColors(data) {
-  let dataLength = data.length;
-  for (var i = 0; i < dataLength; i+= 4) {
+  const dataLength = data.length;
+  for (let i = 0; i < dataLength; i += 4) {
     //invert RGB
     data[i] = data[i] ^ 255;
     data[i+1] = data[i+1] ^ 255;
