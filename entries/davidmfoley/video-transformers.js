@@ -81,26 +81,42 @@ function changebow(width, height) {
 }
 
 function nooptendo(width, height) {
+  let frame = new Array(width * height * 4).fill(0);
+  let nextFrameTime = 0;
+  const frameLength = 100; // 10 FPS
+
   // blow out the colors here
   const levels = [0, 50, 160, 255];
 
   return function(data, time) {
+
     let dataLength = data.length >> 2;
-    for (var i = 0; i < dataLength; i++) {
 
-      const offset = i << 2;
+    if (nextFrameTime < time) {
+      for (var i = 0; i < dataLength; i++) {
 
-      let x = i % width;
-      let y = Math.floor(i / width);
+        const offset = i << 2;
 
-      let centerY = y | 3;
-      let centerX = x | 3;
-      let center = (centerY * width + centerX) << 2;
+        let x = i % width;
+        let y = Math.floor(i / width);
+
+        let centerY = y | 3;
+        let centerX = x | 3;
+        let center = (centerY * width + centerX) << 2;
 
 
-      data[offset] = levels[data[center] >> 6]
-      data[offset+1] = levels[data[center+1] >>6]
-      data[offset+2] = levels[data[center+2] >>6]
+        frame[offset] = data[offset] = levels[data[center] >> 6]
+        frame[offset+1] = data[offset+1] = levels[data[center+1] >>6]
+        frame[offset+2] = data[offset+2] = levels[data[center+2] >>6]
+        frame[offset+3] = data[offset+3]
+      }
+
+      nextFrameTime = time + frameLength;
+    }
+    else {
+      for (var i = 0; i < data.length; i++) {
+        data[i] = frame[i];
+      }
     }
   }
 }
